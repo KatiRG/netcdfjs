@@ -5,6 +5,7 @@ const fs = require('fs');
 const pathFiles = __dirname + '/files/';
 
 describe('Read file', function () {
+    
     it('Throws on non NetCDF file', function () {
         const data = fs.readFileSync(pathFiles + 'not_nc.txt');
         (function notValid() {
@@ -16,6 +17,7 @@ describe('Read file', function () {
         // http://www.unidata.ucar.edu/software/netcdf/examples/files.html
         // http://www.unidata.ucar.edu/software/netcdf/examples/madis-sao.cdl
         const data = fs.readFileSync(pathFiles + 'madis-sao.nc');
+        console.log("data: ", data)
 
         var reader = new NetCDFReader(data);
         reader.version.should.be.equal('classic format');

@@ -7,6 +7,7 @@
  * @param {string} reason - Reason to throw
  */
 function notNetcdf(statement, reason) {
+    console.log("statement: ", statement)
     if (statement) {
         throw new TypeError('Not a valid NetCDF v3.x file: ' + reason);
     }
