@@ -45,7 +45,7 @@
                 var l;
                 console.log("k: ", k)
                 console.log("this: ", this)
-                console.log("this.buffer: ", this.buffer)               
+                console.log("this.buffer: ", this.buffer)
 
                 return l = 'string' == typeof k ? this.header.variables.find(function(m) {
                     return m.name === k
