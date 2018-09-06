@@ -11,17 +11,22 @@
             };
             return a[d].call(e.exports, e, e.exports, b), e.loaded = !0, e.exports
         }
-        var c = {};
+        var c = {};       
         return b.m = a, b.c = c, b.p = '', b(0)
-    }([function(a, b, c) {
+    }
+    //FN 1
+    ([function(a, b, c) { //index.js
+        console.log("c: ", c)
         'use strict';
+
         const d = c(1),
             e = c(2),
             f = c(3),
-            g = c(5);
+            g = c(5);          
         class j {
             constructor(k) {
                 const l = new d(k);
+                console.log("l HERE: ", l)
                 l.setBigEndian(), e.notNetcdf('CDF' !== l.readChars(3), 'should start with CDF');
                 const m = l.readByte();
                 e.notNetcdf(2 === m, '64-bit offset format not supported yet'), e.notNetcdf(1 !== m, 'unknown version'), this.header = g(l), this.header.version = m, this.buffer = l
@@ -29,7 +34,7 @@
             get version() {
                 return 1 === this.header.version ? 'classic format' : '64-bit offset format'
             }
-            get recordDimension() {
+            get recordDimension() {                
                 return this.header.recordDimension
             }
             get dimensions() {
@@ -42,18 +47,53 @@
                 return this.header.variables
             }
             getDataVariable(k) {
-                var l;
-                //console.log("k: ", k) //t2m
-                // console.log("this: ", this)
-                console.log("this.buffer: ", this.buffer)
+                console.log("c(0): ", c(0))
+                console.log("c(1): ", c(1))
+                console.log("c(1).length: ", c(1).length)
+                console.log("d.length: ", d.length)
+                console.log("c(2): ", c(2))
+                console.log("c(3): ", c(3))
+                console.log("c(4): ", c(4))
+                console.log("c(5): ", c(5))
+                // var l;
+                // console.log("this.buffer: ", this.buffer)
 
-                return l = 'string' == typeof k ? this.header.variables.find(function(m) {
-                    return m.name === k
-                }) : k, e.notNetcdf(void 0 == l, 'variable not found'), this.buffer.seek(l.offset), l.record ? f.record(this.buffer, l, this.header.recordDimension) : f.nonRecord(this.buffer, l)
+                // return l = 'string' == typeof k ? this.header.variables.find(function(m) {
+                //     return m.name === k
+                // }) : k, e.notNetcdf(void 0 == l, 'variable not found'), this.buffer.seek(l.offset), l.record ? f.record(this.buffer, l, this.header.recordDimension) : f.nonRecord(this.buffer, l)
+
+                var data=f; //mine
+                console.log("data: ", data)
+                var variable;
+                    if (typeof k === 'string') {
+                        // search the variable
+                        console.log('this.header.vars: ', this.header.variables)
+                        variable = this.header.variables.find(function (val) {
+                            return val.name === k;
+                        });
+                    } else {
+                        variable = k;
+                    }
+
+                    // throws if variable not found
+                    // utils.notNetcdf((variable === undefined), 'variable not found');
+
+                    // go to the offset position
+                    this.buffer.seek(variable.offset);
+
+                    if (variable.record) {
+                        // record variable case
+                        return data.record(this.buffer, variable, this.header.recordDimension);
+                    } else {
+                        // non-record variable case
+                        return data.nonRecord(this.buffer, variable);
+                    }
             }
         }
         a.exports = j
-    }, function(a, b) {
+    }, 
+    //FN 2
+    function(a, b) {
         'use strict';
         const c = 8192,
             d = [];
@@ -197,7 +237,9 @@
                 return new Uint8Array(this.buffer, 0, this.offset)
             }
         }
-    }, function(a, b) {
+    }, 
+    //FN 3 utils.js
+    function(a, b) {  //utils.js
         'use strict';
 
         function c(d) {
@@ -210,10 +252,12 @@
                 g = e.readChars(f);
             return c(e), g
         }
-    }, function(a, b, c) {
+    }, 
+    //FN 4 data.js (supports 2-D variables)
+    function(a, b, c) {  //data.js (supports 2-D variables)
         'use strict';
         const d = c(4);
-        a.exports.nonRecord = function(f, g) {
+        a.exports.nonRecord = function(f, g) { 
             const h = d.str2num(g.type);
             var j = g.size / d.num2bytes(h),
                 k = Array(j);
@@ -230,7 +274,9 @@
             }
             return l
         }
-    }, function(a, b, c) {
+    }, 
+    //FN 5 types.js
+    function(a, b, c) { //types.js
         'use strict';
 
         function d(h, j) {
@@ -308,7 +354,9 @@
         }, a.exports.readType = function(j, k, l) {
             return k === g.BYTE ? j.readBytes(l) : k === g.CHAR ? e(j.readChars(l)) : k === g.SHORT ? d(l, j.readInt16.bind(j)) : k === g.INT ? d(l, j.readInt32.bind(j)) : k === g.FLOAT ? d(l, j.readFloat32.bind(j)) : k === g.DOUBLE ? d(l, j.readFloat64.bind(j)) : (f(!0, 'non valid type ' + k), void 0)
         }
-    }, function(a, b, c) {
+    }, 
+    //FN 6 header.js
+    function(a, b, c) {  //header.js
         'use strict';
 
         function d(k) {
@@ -390,6 +438,7 @@
             h = c(4),
             j = 0;
         a.exports = function(l) {
+            console.log("l HERE: ", l)
             var k = {
                     recordDimension: {
                         length: l.readUint32()

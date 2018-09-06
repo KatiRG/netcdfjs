@@ -27,11 +27,16 @@ function handleFileSelect(evt) {
     //replace reader with NetCDF reader
     console.log("this.result: ", this.result)
     reader = new netcdfjs(this.result);
+
+
     console.log("reader: ", reader);
     // reader.getDataVariable('wmoId'); // go to offset and read it
-    var ncvar = "t2m";
+
+    var ncvar = "skyHeightMethod"; //"staticIds"; //"t2m"; //"wmoId"; //"t2m"; //
     reader.getDataVariable(ncvar); 
     console.log("reader.getDataVariable(ncvar): ", reader.getDataVariable(ncvar));
+    console.log("reader.header.recordDimension: ", reader.recordDimension)
+    console.log("reader.header.dimensions: ", reader.dimensions)
 
     
 
