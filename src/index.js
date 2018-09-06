@@ -104,6 +104,7 @@ class NetCDFReader {
         utils.notNetcdf((variable === undefined), 'variable not found');
 
         // go to the offset position
+        console.log("variable.offset in index.js: ", variable.offset)
         this.buffer.seek(variable.offset);
 
         if (variable.record) {

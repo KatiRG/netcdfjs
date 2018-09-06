@@ -43,8 +43,8 @@
             }
             getDataVariable(k) {
                 var l;
-                console.log("k: ", k)
-                console.log("this: ", this)
+                //console.log("k: ", k) //t2m
+                // console.log("this: ", this)
                 console.log("this.buffer: ", this.buffer)
 
                 return l = 'string' == typeof k ? this.header.variables.find(function(m) {
