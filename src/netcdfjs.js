@@ -185,6 +185,7 @@
                 return this.offset += 4, f
             }
             readFloat32() {
+                console.log("in readFloat32")
                 var f = this._data.getFloat32(this.offset, this.littleEndian);
                 return this.offset += 4, f
             }
@@ -277,19 +278,24 @@
             console.log("g.dimensions in exports.record: ", g.dimensions) //h = header.recordDimension ("timecounter", length 12)
             console.log("j in exports.record: ", j)
             var k = h.length, //12
-                l = Array(k);
+                l = Array(k),
+               numpts = 96*96-1;
             console.log("h in exports.record: ", h)
             const m = h.recordStep; //36912
             for (var o = 0; o < k; o++) {
                 var p = f.offset; //454692
                 console.log("loop count o: ", o)
-                console.log("d.readType for month o: ", d.readType(f, j, 1))
-                console.log("d.readType: ", d.readType(f, j, 9215)) //96*96-1
-                //console.log("f.seek(p + m): ", f.seek(p + m))
-                l[o] = d.readType(f, j, 1), f.seek(p + m)
+                // console.log("d.readType for month o: ", d.readType(f, j, 1))
+                //console.log("d.readType: ", d.readType(f, j, 9215)) //96*96-1                
+                // l[o] = d.readType(f, j, 1), f.seek(p + m) //orig
+                l[o] = d.readType(f, j, numpts)
+                //junk = d.readType(f, j, 100)
+                
                 //console.log('l[o]: ', l[o])
             }
             console.log("l in exports.record: ", l)
+
+
             return l
         }
     }, 
@@ -370,6 +376,7 @@
                     return -1;
             }
         }, a.exports.readType = function(j, k, l) {
+            console.log("readType l: ", l)
             return k === g.BYTE ? j.readBytes(l) : k === g.CHAR ? e(j.readChars(l)) : k === g.SHORT ? d(l, j.readInt16.bind(j)) : k === g.INT ? d(l, j.readInt32.bind(j)) : k === g.FLOAT ? d(l, j.readFloat32.bind(j)) : k === g.DOUBLE ? d(l, j.readFloat64.bind(j)) : (f(!0, 'non valid type ' + k), void 0)
         }
     }, 
