@@ -48,52 +48,58 @@
             getDataVariable(k) {
                 console.log("this: ", this) //shows correct size of lat and lon
 
-                // var l;
-                // console.log("this.buffer: ", this.buffer)
+                var l, numpts;
+                console.log("this.buffer: ", this.buffer)
 
-                // return l = 'string' == typeof k ? this.header.variables.find(function(m) {
-                //     return m.name === k
-                // }) : k, e.notNetcdf(void 0 == l, 'variable not found'), this.buffer.seek(l.offset), l.record ? f.record(this.buffer, l, this.header.recordDimension) : f.nonRecord(this.buffer, l)
-
-                var data=f; //mine
-                console.log("data: ", data)
-                var variable;
-                    if (typeof k === 'string') {
-                        // search the variable
-                        console.log('this.header.variables: ', this.header.variables)
-                        variable = this.header.variables.find(function (val) {
-                            return val.name === k;
-                        });
-                    } else {
-                        variable = k;
-                    }
-                // search for lat and lon size
-                var numpts; //total number of points = lat*long-1                
-                console.log('this.header.dimensions: ', this.header.dimensions)          
-                
                 numpts = this.header.dimensions.find(function (val) {return val.name === "lat";}).size *
                         this.header.dimensions.find(function (val) {return val.name === "lon";}).size - 1;
                 console.log("numpts: ", numpts)
+
+                return l = 'string' == typeof k ? 
+                    this.header.variables.find(function(m) { return m.name === k }) : k, 
+                    e.notNetcdf(void 0 == l, 'variable not found'), 
+                    this.buffer.seek(l.offset), l.record ? f.record(this.buffer, l, this.header.recordDimension, numpts) : f.nonRecord(this.buffer, l);
+
+                //LONG FORM (copied from src/index.js)
+                // var data=f; //mine
+                // console.log("data: ", data)
+                // var variable;
+                //     if (typeof k === 'string') {
+                //         // search the variable
+                //         console.log('this.header.variables: ', this.header.variables)
+                //         variable = this.header.variables.find(function (val) {
+                //             return val.name === k;
+                //         });
+                //     } else {
+                //         variable = k;
+                //     }
+                // // search for lat and lon size
+                // var numpts; //total number of points = lat*long-1                
+                // console.log('this.header.dimensions: ', this.header.dimensions)          
+                
+                // numpts = this.header.dimensions.find(function (val) {return val.name === "lat";}).size *
+                //         this.header.dimensions.find(function (val) {return val.name === "lon";}).size - 1;
+                // console.log("numpts: ", numpts)
                     
 
-                    // throws if variable not found
-                    // utils.notNetcdf((variable === undefined), 'variable not found');
+                //     // throws if variable not found
+                //     // utils.notNetcdf((variable === undefined), 'variable not found');
 
-                    // go to the offset position
-                    this.buffer.seek(variable.offset);
+                //     // go to the offset position
+                //     this.buffer.seek(variable.offset);
 
-                    if (variable.record) {
-                        // record variable case
-                        console.log("record variable case") //YES for our file
-                        console.log("variable: ", variable)
-                        //console.log("this.header: ", this.header)
-                        console.log("this.header.recordDimension: ", this.header.recordDimension)
-                        return data.record(this.buffer, variable, this.header.recordDimension, numpts);
-                    } else {
-                        console.log("non-record variable case")
-                        // non-record variable case
-                        return data.nonRecord(this.buffer, variable);
-                    }
+                //     if (variable.record) {
+                //         // record variable case
+                //         console.log("record variable case") //YES for our file
+                //         console.log("variable: ", variable)
+                //         //console.log("this.header: ", this.header)
+                //         console.log("this.header.recordDimension: ", this.header.recordDimension)
+                //         return data.record(this.buffer, variable, this.header.recordDimension, numpts);
+                //     } else {
+                //         console.log("non-record variable case")
+                //         // non-record variable case
+                //         return data.nonRecord(this.buffer, variable);
+                //     }
             }
         }
         a.exports = j
