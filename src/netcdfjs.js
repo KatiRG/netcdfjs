@@ -270,16 +270,24 @@
                 k = Array(j);
             for (var l = 0; l < j; l++) k[l] = d.readType(f, h, 1);
             return k
-        }, a.exports.record = function(f, g, h) {
+        }, a.exports.record = function(f, g, h) { //f = ?? (contains offset value), g = "variable", h = header.recordDimension ("timecounter", length 12)
             const j = d.str2num(g.type);
+            console.log("f in exports.record: ", f) //f = ?? (contains offset value)
+            console.log("g in exports.record: ", g) //g = "variable"
+            console.log("g.dimensions in exports.record: ", g.dimensions) //h = header.recordDimension ("timecounter", length 12)
             console.log("j in exports.record: ", j)
-            var k = h.length,
+            var k = h.length, //12
                 l = Array(k);
             console.log("h in exports.record: ", h)
-            const m = h.recordStep;
+            const m = h.recordStep; //36912
             for (var o = 0; o < k; o++) {
-                var p = f.offset;
+                var p = f.offset; //454692
+                console.log("loop count o: ", o)
+                console.log("d.readType for month o: ", d.readType(f, j, 1))
+                console.log("d.readType: ", d.readType(f, j, 9215)) //96*96-1
+                //console.log("f.seek(p + m): ", f.seek(p + m))
                 l[o] = d.readType(f, j, 1), f.seek(p + m)
+                //console.log('l[o]: ', l[o])
             }
             console.log("l in exports.record: ", l)
             return l

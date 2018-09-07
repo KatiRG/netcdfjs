@@ -32,7 +32,7 @@ function handleFileSelect(evt) {
     console.log("reader: ", reader); //shows correct size of lat and lon
     // reader.getDataVariable('wmoId'); // go to offset and read it
 
-    var ncvar = "t2m"; //"precip6HourQCD"; //"staticIds"; //"t2m"; //"wmoId"; //"t2m"; //
+    var ncvar = "t2m"; //"lat"; //"precip6HourQCD"; //"staticIds"; //"t2m"; //"wmoId"; //"t2m"; //
     reader.getDataVariable(ncvar); 
     console.log("reader.getDataVariable(ncvar): ", reader.getDataVariable(ncvar));
     console.log("reader.header.recordDimension: ", reader.recordDimension)
