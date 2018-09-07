@@ -29,16 +29,17 @@ function handleFileSelect(evt) {
     reader = new netcdfjs(this.result);
 
 
-    console.log("reader: ", reader);
+    console.log("reader: ", reader); //shows correct size of lat and lon
     // reader.getDataVariable('wmoId'); // go to offset and read it
 
-    var ncvar = "skyHeightMethod"; //"staticIds"; //"t2m"; //"wmoId"; //"t2m"; //
+    var ncvar = "t2m"; //"precip6HourQCD"; //"staticIds"; //"t2m"; //"wmoId"; //"t2m"; //
     reader.getDataVariable(ncvar); 
     console.log("reader.getDataVariable(ncvar): ", reader.getDataVariable(ncvar));
     console.log("reader.header.recordDimension: ", reader.recordDimension)
     console.log("reader.header.dimensions: ", reader.dimensions)
 
-    
+    fvar.style.width = '100%';
+    fvar.textContent = 'nc variable to get: ' + ncvar;
 
    //... your program here  ..//
 
@@ -52,6 +53,12 @@ input.id='files'
 input.type = "file";
 input.className = "file"; 
 document.body.appendChild(input); // put it into the DOM
+
+// Make input element <input type="file" id="files" name="file" />
+var fvar = document.createElement("div");
+fvar.id='fvarId'
+document.body.appendChild(fvar); // put it into the DOM
+
 
 // Make a Progress bar <div id="progress_bar"><div class="percent">0%</div></div>
 var progress = document.createElement("div");

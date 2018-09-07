@@ -16,17 +16,16 @@
     }
     //FN 1
     ([function(a, b, c) { //index.js
-        console.log("c: ", c)
+        console.log("c: ", c)        
         'use strict';
 
         const d = c(1),
             e = c(2),
             f = c(3),
-            g = c(5);          
+            g = c(5);   
         class j {
             constructor(k) {
                 const l = new d(k);
-                console.log("l HERE: ", l)
                 l.setBigEndian(), e.notNetcdf('CDF' !== l.readChars(3), 'should start with CDF');
                 const m = l.readByte();
                 e.notNetcdf(2 === m, '64-bit offset format not supported yet'), e.notNetcdf(1 !== m, 'unknown version'), this.header = g(l), this.header.version = m, this.buffer = l
@@ -47,6 +46,7 @@
                 return this.header.variables
             }
             getDataVariable(k) {
+                console.log("this: ", this) //shows correct size of lat and lon
                 console.log("c(0): ", c(0))
                 console.log("c(1): ", c(1))
                 console.log("c(1).length: ", c(1).length)
@@ -83,8 +83,15 @@
 
                     if (variable.record) {
                         // record variable case
+                        console.log("record variable case") //YES for our file
+                        console.log("data.record: ", data.record)
+                        console.log("this.buffer: ", this.buffer)
+                        console.log("variable: ", variable)
+                        console.log("this.header: ", this.header)
+                        console.log("this.header.recordDimension: ", this.header.recordDimension)
                         return data.record(this.buffer, variable, this.header.recordDimension);
                     } else {
+                        console.log("non-record variable case")
                         // non-record variable case
                         return data.nonRecord(this.buffer, variable);
                     }
@@ -265,13 +272,16 @@
             return k
         }, a.exports.record = function(f, g, h) {
             const j = d.str2num(g.type);
+            console.log("j in exports.record: ", j)
             var k = h.length,
                 l = Array(k);
+            console.log("h in exports.record: ", h)
             const m = h.recordStep;
             for (var o = 0; o < k; o++) {
                 var p = f.offset;
                 l[o] = d.readType(f, j, 1), f.seek(p + m)
             }
+            console.log("l in exports.record: ", l)
             return l
         }
     }, 
