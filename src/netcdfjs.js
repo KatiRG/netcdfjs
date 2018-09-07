@@ -47,14 +47,7 @@
             }
             getDataVariable(k) {
                 console.log("this: ", this) //shows correct size of lat and lon
-                console.log("c(0): ", c(0))
-                console.log("c(1): ", c(1))
-                console.log("c(1).length: ", c(1).length)
-                console.log("d.length: ", d.length)
-                console.log("c(2): ", c(2))
-                console.log("c(3): ", c(3))
-                console.log("c(4): ", c(4))
-                console.log("c(5): ", c(5))
+
                 // var l;
                 // console.log("this.buffer: ", this.buffer)
 
@@ -67,13 +60,21 @@
                 var variable;
                     if (typeof k === 'string') {
                         // search the variable
-                        console.log('this.header.vars: ', this.header.variables)
+                        console.log('this.header.variables: ', this.header.variables)
                         variable = this.header.variables.find(function (val) {
                             return val.name === k;
                         });
                     } else {
                         variable = k;
                     }
+                // search for lat and lon size
+                var numpts; //total number of points = lat*long-1                
+                console.log('this.header.dimensions: ', this.header.dimensions)          
+                
+                numpts = this.header.dimensions.find(function (val) {return val.name === "lat";}).size *
+                        this.header.dimensions.find(function (val) {return val.name === "lon";}).size - 1;
+                console.log("numpts: ", numpts)
+                    
 
                     // throws if variable not found
                     // utils.notNetcdf((variable === undefined), 'variable not found');
@@ -84,12 +85,10 @@
                     if (variable.record) {
                         // record variable case
                         console.log("record variable case") //YES for our file
-                        console.log("data.record: ", data.record)
-                        console.log("this.buffer: ", this.buffer)
                         console.log("variable: ", variable)
-                        console.log("this.header: ", this.header)
+                        //console.log("this.header: ", this.header)
                         console.log("this.header.recordDimension: ", this.header.recordDimension)
-                        return data.record(this.buffer, variable, this.header.recordDimension);
+                        return data.record(this.buffer, variable, this.header.recordDimension, numpts);
                     } else {
                         console.log("non-record variable case")
                         // non-record variable case
@@ -185,7 +184,6 @@
                 return this.offset += 4, f
             }
             readFloat32() {
-                console.log("in readFloat32")
                 var f = this._data.getFloat32(this.offset, this.littleEndian);
                 return this.offset += 4, f
             }
@@ -271,30 +269,23 @@
                 k = Array(j);
             for (var l = 0; l < j; l++) k[l] = d.readType(f, h, 1);
             return k
-        }, a.exports.record = function(f, g, h) { //f = ?? (contains offset value), g = "variable", h = header.recordDimension ("timecounter", length 12)
+        }, a.exports.record = function(f, g, h, numpts) { //f = ?? (contains offset value), g = "variable", h = header.recordDimension ("timecounter", length 12)
             const j = d.str2num(g.type);
             console.log("f in exports.record: ", f) //f = ?? (contains offset value)
             console.log("g in exports.record: ", g) //g = "variable"
             console.log("g.dimensions in exports.record: ", g.dimensions) //h = header.recordDimension ("timecounter", length 12)
+            console.log("numpts in exports.record: ", numpts)
             console.log("j in exports.record: ", j)
             var k = h.length, //12
-                l = Array(k),
-               numpts = 96*96-1;
+                l = Array(k);
             console.log("h in exports.record: ", h)
             const m = h.recordStep; //36912
             for (var o = 0; o < k; o++) {
-                var p = f.offset; //454692
-                console.log("loop count o: ", o)
-                // console.log("d.readType for month o: ", d.readType(f, j, 1))
-                //console.log("d.readType: ", d.readType(f, j, 9215)) //96*96-1                
+                // var p = f.offset; //454692 ORIG         
                 // l[o] = d.readType(f, j, 1), f.seek(p + m) //orig
                 l[o] = d.readType(f, j, numpts)
-                //junk = d.readType(f, j, 100)
-                
-                //console.log('l[o]: ', l[o])
             }
             console.log("l in exports.record: ", l)
-
 
             return l
         }
@@ -376,7 +367,6 @@
                     return -1;
             }
         }, a.exports.readType = function(j, k, l) {
-            console.log("readType l: ", l)
             return k === g.BYTE ? j.readBytes(l) : k === g.CHAR ? e(j.readChars(l)) : k === g.SHORT ? d(l, j.readInt16.bind(j)) : k === g.INT ? d(l, j.readInt32.bind(j)) : k === g.FLOAT ? d(l, j.readFloat32.bind(j)) : k === g.DOUBLE ? d(l, j.readFloat64.bind(j)) : (f(!0, 'non valid type ' + k), void 0)
         }
     }, 
