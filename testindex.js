@@ -40,6 +40,7 @@ function handleFileSelect(evt) {
     var dataArray = reader.getDataVariable(ncvar); //variable array returned by getDataVariable()
     
     console.log("reader.getDataVariable(ncvar): ", dataArray);
+    console.log("reader.getDataVariable(ncvar) month 0: ", dataArray[0]);
     // console.log("reader.header.recordDimension: ", reader.recordDimension)
     // console.log("reader.header.dimensions: ", reader.dimensions)
 
@@ -63,32 +64,16 @@ function handleFileSelect(evt) {
    //Create object from reader outputs
     const myObj = {
       header: {"nx": nx, "ny": ny},
-      data: [1,2,3,4,5],
+      data: dataArray[0],
       meta: {"date": timeStamp}
     };
 
     //Convert to JSON format
     jsonData = JSON.stringify(myObj);
     console.log("jsonData: ", jsonData)
-
-    //Save to file
-    function download(content, fileName, contentType) {
-        var a = document.createElement("a");
-        var file = new Blob([content], {type: contentType});
-        a.href = URL.createObjectURL(file);
-        a.download = fileName;
-        //a.click();
-    }
-    download(jsonData, 'json.txt', 'text/plain');
-
-    function myFunction(arr) {
-        var out = "";
-             
-        out += arr + '</a><br>';
-        
-        document.getElementById("id01").innerHTML = out;
-    }
-    myFunction(jsonData)
+    console.log("[jsonData]: ", [jsonData])
+    
+    document.getElementById("id01").innerHTML = [jsonData];
 
     //end my code
 
