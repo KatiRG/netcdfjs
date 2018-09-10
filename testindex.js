@@ -4,8 +4,8 @@ function abortRead() {  reader.abort(); }
 
 function handleFileSelect(evt) {  
   // Reset progress indicator on new file selection.
-  progress.style.width = '0%';
-  progress.textContent = '0%';
+  // progress.style.width = '0%';
+  // progress.textContent = '0%';
 
   reader = new FileReader();
   reader.onerror = errorHandler;
@@ -23,7 +23,7 @@ function handleFileSelect(evt) {
 
     // Ensure that the progress bar displays 100% at the end.
     progress.style.width = '100%';
-    progress.textContent = '100%';
+    //progress.textContent = '100%';
     setTimeout("document.getElementById('progress_bar').className='';", 2000);
     //var reader = new NetCDFReader(reader.result); //for Node.js ?
 
@@ -37,9 +37,9 @@ function handleFileSelect(evt) {
     // reader.getDataVariable('wmoId'); // go to offset and read it
 
     var ncvar = "t2m"; //"lat"; //"precip6HourQCD"; //"staticIds"; //"t2m"; //"wmoId"; //"t2m"; //
-    var var_array = reader.getDataVariable(ncvar); //variable array returned by getDataVariable()
+    var dataArray = reader.getDataVariable(ncvar); //variable array returned by getDataVariable()
     
-    console.log("reader.getDataVariable(ncvar): ", var_array);
+    console.log("reader.getDataVariable(ncvar): ", dataArray);
     // console.log("reader.header.recordDimension: ", reader.recordDimension)
     // console.log("reader.header.dimensions: ", reader.dimensions)
 
@@ -60,16 +60,35 @@ function handleFileSelect(evt) {
     fvar.textContent = 'nc variable to get: ' + ncvar;
 
    //... your program here  ..//
-   //write json file
+   //Create object from reader outputs
     const myObj = {
-      header: {"nx": 96, "ny": 96},
+      header: {"nx": nx, "ny": ny},
       data: [1,2,3,4,5],
-      meta: {"date": 20180910}
+      meta: {"date": timeStamp}
     };
 
-    jsonArray = JSON.stringify(myObj);
-    console.log("jsonArray: ", jsonArray)
+    //Convert to JSON format
+    jsonData = JSON.stringify(myObj);
+    console.log("jsonData: ", jsonData)
 
+    //Save to file
+    function download(content, fileName, contentType) {
+        var a = document.createElement("a");
+        var file = new Blob([content], {type: contentType});
+        a.href = URL.createObjectURL(file);
+        a.download = fileName;
+        //a.click();
+    }
+    download(jsonData, 'json.txt', 'text/plain');
+
+    function myFunction(arr) {
+        var out = "";
+             
+        out += arr + '</a><br>';
+        
+        document.getElementById("id01").innerHTML = out;
+    }
+    myFunction(jsonData)
 
     //end my code
 
@@ -88,6 +107,11 @@ document.body.appendChild(input); // put it into the DOM
 var fvar = document.createElement("div");
 fvar.id='fvarId'
 document.body.appendChild(fvar); // put it into the DOM
+
+// Display json obj
+var id01 = document.createElement("div");
+id01.id='id01'
+document.body.appendChild(id01); // put it into the DOM
 
 
 // Make a Progress bar <div id="progress_bar"><div class="percent">0%</div></div>
@@ -120,8 +144,8 @@ function updateProgress(evt) {
     var percentLoaded = Math.round((evt.loaded / evt.total) * 100);
     // Increase the progress bar length.
     if (percentLoaded < 100) {
-      progress.style.width = percentLoaded + '%';
-      progress.textContent = percentLoaded + '%';
+      //progress.style.width = percentLoaded + '%';
+      //progress.textContent = percentLoaded + '%';
     }
   }
 }
