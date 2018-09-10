@@ -15,9 +15,8 @@
         return b.m = a, b.c = c, b.p = '', b(0)
     }
     //FN 1
-    ([function(a, b, c) { //index.js
-        console.log("c: ", c)        
-        'use strict';
+    ([function(a, b, c) { //index.js        
+        'use strict'; //strict mode, you can not, for example, use undeclared variables
 
         const d = c(1),
             e = c(2),
@@ -44,7 +43,7 @@
             }
             get variables() {
                 return this.header.variables
-            }
+            }            
             getDataVariable(k) {
                 console.log("this: ", this) //shows correct size of lat and lon
 
@@ -101,8 +100,8 @@
                 //         return data.nonRecord(this.buffer, variable);
                 //     }
             }
-        }
-        a.exports = j
+        }        
+        a.exports = j        
     }, 
     //FN 2
     function(a, b) {
@@ -277,22 +276,19 @@
             return k
         }, a.exports.record = function(f, g, h, numpts) { //f = ?? (contains offset value), g = "variable", h = header.recordDimension ("timecounter", length 12)
             const j = d.str2num(g.type);
-            console.log("f in exports.record: ", f) //f = ?? (contains offset value)
-            console.log("g in exports.record: ", g) //g = "variable"
-            console.log("g.dimensions in exports.record: ", g.dimensions) //h = header.recordDimension ("timecounter", length 12)
-            console.log("numpts in exports.record: ", numpts)
-            console.log("j in exports.record: ", j)
+            // console.log("f in exports.record: ", f) //f = ?? (contains offset value)
+            // console.log("g in exports.record: ", g) //g = "variable"
+            // console.log("g.dimensions in exports.record: ", g.dimensions) //h = header.recordDimension ("timecounter", length 12)
+            // console.log("numpts in exports.record: ", numpts)
             var k = h.length, //12
                 l = Array(k);
-            console.log("h in exports.record: ", h)
+            // console.log("h in exports.record: ", h) //timecounter, length=12
             const m = h.recordStep; //36912
             for (var o = 0; o < k; o++) {
                 // var p = f.offset; //454692 ORIG         
                 // l[o] = d.readType(f, j, 1), f.seek(p + m) //orig
                 l[o] = d.readType(f, j, numpts)
             }
-            console.log("l in exports.record: ", l)
-
             return l
         }
     }, 
@@ -459,7 +455,6 @@
             h = c(4),
             j = 0;
         a.exports = function(l) {
-            console.log("l HERE: ", l)
             var k = {
                     recordDimension: {
                         length: l.readUint32()

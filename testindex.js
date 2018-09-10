@@ -2,7 +2,7 @@ var reader;
 var progress = document.querySelector('.percent');
 function abortRead() {  reader.abort(); }
 
-function handleFileSelect(evt) {
+function handleFileSelect(evt) {  
   // Reset progress indicator on new file selection.
   progress.style.width = '0%';
   progress.textContent = '0%';
@@ -13,20 +13,22 @@ function handleFileSelect(evt) {
   reader.onabort = function(e) {
     alert('File read cancelled');
   };
+  // console.log("evt before onloadstart: ", evt)
   reader.onloadstart = function(e) {
     document.getElementById('progress_bar').className = 'loading';
-  };
+  };  
   reader.onload = function(e) {
-    console.log("whatis evt: ", evt)
+    // console.log("whatis evt: ", evt)
     console.log("filename from evt: ", evt.target.files[0].name)
 
     // Ensure that the progress bar displays 100% at the end.
     progress.style.width = '100%';
     progress.textContent = '100%';
     setTimeout("document.getElementById('progress_bar').className='';", 2000);
-    //var reader = new NetCDFReader(reader.result);
+    //var reader = new NetCDFReader(reader.result); //for Node.js ?
 
-    //replace reader with NetCDF reader
+    //pass this.result (=ArrayBuffer of length 464692 bytes) to netcdfjs()
+    // console.log("this: ", this)
     console.log("this.result: ", this.result)
     reader = new netcdfjs(this.result);
 
@@ -35,15 +37,41 @@ function handleFileSelect(evt) {
     // reader.getDataVariable('wmoId'); // go to offset and read it
 
     var ncvar = "t2m"; //"lat"; //"precip6HourQCD"; //"staticIds"; //"t2m"; //"wmoId"; //"t2m"; //
-    reader.getDataVariable(ncvar); 
-    console.log("reader.getDataVariable(ncvar): ", reader.getDataVariable(ncvar));
+    var var_array = reader.getDataVariable(ncvar); //variable array returned by getDataVariable()
+    
+    console.log("reader.getDataVariable(ncvar): ", var_array);
     // console.log("reader.header.recordDimension: ", reader.recordDimension)
     // console.log("reader.header.dimensions: ", reader.dimensions)
+
+    
+    console.log("reader.getDataVariable for lat LENGTH: ", reader.getDataVariable("lat").length)
+    var nx = reader.getDataVariable("lat").length;
+    var ny = reader.getDataVariable("lon").length;
+    var la1 = 90, la2 = -90, lo1 = -180, lo2 = 180; //FIXED
+    var dx = 360/nx, dy = 180/ny;
+    
+
+    var timeStamp = reader.header.globalAttributes.find(function (val) {
+      return val.name === "timeStamp";
+    }).value;
+    console.log("timeStamp: ", timeStamp)
 
     fvar.style.width = '100%';
     fvar.textContent = 'nc variable to get: ' + ncvar;
 
    //... your program here  ..//
+   //write json file
+    const myObj = {
+      header: {"nx": 96, "ny": 96},
+      data: [1,2,3,4,5],
+      meta: {"date": 20180910}
+    };
+
+    jsonArray = JSON.stringify(myObj);
+    console.log("jsonArray: ", jsonArray)
+
+
+    //end my code
 
   }
   reader.readAsArrayBuffer(evt.target.files[0]);
