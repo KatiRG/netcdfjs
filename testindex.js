@@ -58,7 +58,7 @@ function handleFileSelect(evt) {
     console.log("timeStamp: ", timeStamp)
 
     fvar.style.width = '100%';
-    fvar.textContent = 'nc variable to get: ' + ncvar;
+    fvar.textContent = 'Selected nc variable: ' + ncvar;
 
    //... your program here  ..//
    //Create object from reader outputs
@@ -73,6 +73,9 @@ function handleFileSelect(evt) {
     console.log("jsonData: ", jsonData)
     console.log("[jsonData]: ", [jsonData])
     
+    //Display jsonData in div "id01"
+    //https://www.w3schools.com/js/js_json_files.asp
+    id01.style.width = '50%';
     document.getElementById("id01").innerHTML = [jsonData];
 
     //end my code
