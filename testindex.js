@@ -17,6 +17,8 @@ function handleFileSelect(evt) {
     document.getElementById('progress_bar').className = 'loading';
   };
   reader.onload = function(e) {
+    console.log("whatis evt: ", evt)
+    console.log("filename from evt: ", evt.target.files[0].name)
 
     // Ensure that the progress bar displays 100% at the end.
     progress.style.width = '100%';
@@ -34,7 +36,7 @@ function handleFileSelect(evt) {
 
     var ncvar = "t2m"; //"lat"; //"precip6HourQCD"; //"staticIds"; //"t2m"; //"wmoId"; //"t2m"; //
     reader.getDataVariable(ncvar); 
-    // console.log("reader.getDataVariable(ncvar): ", reader.getDataVariable(ncvar));
+    console.log("reader.getDataVariable(ncvar): ", reader.getDataVariable(ncvar));
     // console.log("reader.header.recordDimension: ", reader.recordDimension)
     // console.log("reader.header.dimensions: ", reader.dimensions)
 
@@ -45,7 +47,7 @@ function handleFileSelect(evt) {
 
   }
   reader.readAsArrayBuffer(evt.target.files[0]);
-}
+} //end handleFileSelect()
 
 // Make input element <input type="file" id="files" name="file" />
 var input = document.createElement("input");
